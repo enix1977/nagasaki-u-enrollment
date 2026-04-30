@@ -2560,7 +2560,8 @@
           "46": 71,
           "47": 3216,
           "48": 50
-        }
+        },
+        "48": {}
       }
     },
     "2022": {
@@ -5012,7 +5013,8 @@
           "46": 83,
           "47": 3426,
           "48": 37
-        }
+        },
+        "48": {}
       }
     },
     "2023": {
@@ -7464,7 +7466,8 @@
           "46": 75,
           "47": 3438,
           "48": 27
-        }
+        },
+        "48": {}
       }
     },
     "2024": {
@@ -9916,7 +9919,721 @@
           "46": 73,
           "47": 3463,
           "48": 44
-        }
+        },
+        "48": {}
+      }
+    }
+  },
+  "graduate_data": {
+    "2022": {
+      "01": {
+        "graduates": 38179,
+        "univ_applicants": 19204,
+        "univ_rate": 50.3
+      },
+      "02": {
+        "graduates": 10337,
+        "univ_applicants": 5383,
+        "univ_rate": 52.1
+      },
+      "03": {
+        "graduates": 10017,
+        "univ_applicants": 4675,
+        "univ_rate": 46.7
+      },
+      "04": {
+        "graduates": 18434,
+        "univ_applicants": 9947,
+        "univ_rate": 54.0
+      },
+      "05": {
+        "graduates": 7055,
+        "univ_applicants": 3407,
+        "univ_rate": 48.3
+      },
+      "06": {
+        "graduates": 8998,
+        "univ_applicants": 4450,
+        "univ_rate": 49.5
+      },
+      "07": {
+        "graduates": 15242,
+        "univ_applicants": 7444,
+        "univ_rate": 48.8
+      },
+      "08": {
+        "graduates": 23813,
+        "univ_applicants": 13068,
+        "univ_rate": 54.9
+      },
+      "09": {
+        "graduates": 16409,
+        "univ_applicants": 8967,
+        "univ_rate": 54.6
+      },
+      "10": {
+        "graduates": 16236,
+        "univ_applicants": 9160,
+        "univ_rate": 56.4
+      },
+      "11": {
+        "graduates": 54053,
+        "univ_applicants": 34244,
+        "univ_rate": 63.4
+      },
+      "12": {
+        "graduates": 46852,
+        "univ_applicants": 28763,
+        "univ_rate": 61.4
+      },
+      "13": {
+        "graduates": 98713,
+        "univ_applicants": 70555,
+        "univ_rate": 71.5
+      },
+      "14": {
+        "graduates": 64786,
+        "univ_applicants": 42779,
+        "univ_rate": 66.0
+      },
+      "15": {
+        "graduates": 17172,
+        "univ_applicants": 8750,
+        "univ_rate": 51.0
+      },
+      "16": {
+        "graduates": 8517,
+        "univ_applicants": 4814,
+        "univ_rate": 56.5
+      },
+      "17": {
+        "graduates": 9995,
+        "univ_applicants": 6023,
+        "univ_rate": 60.3
+      },
+      "18": {
+        "graduates": 6705,
+        "univ_applicants": 4013,
+        "univ_rate": 59.9
+      },
+      "19": {
+        "graduates": 7541,
+        "univ_applicants": 4513,
+        "univ_rate": 59.8
+      },
+      "20": {
+        "graduates": 17397,
+        "univ_applicants": 9296,
+        "univ_rate": 53.4
+      },
+      "21": {
+        "graduates": 16916,
+        "univ_applicants": 10003,
+        "univ_rate": 59.1
+      },
+      "22": {
+        "graduates": 30164,
+        "univ_applicants": 16818,
+        "univ_rate": 55.8
+      },
+      "23": {
+        "graduates": 60818,
+        "univ_applicants": 37597,
+        "univ_rate": 61.8
+      },
+      "24": {
+        "graduates": 14607,
+        "univ_applicants": 7837,
+        "univ_rate": 53.7
+      },
+      "25": {
+        "graduates": 12108,
+        "univ_applicants": 7196,
+        "univ_rate": 59.4
+      },
+      "26": {
+        "graduates": 21821,
+        "univ_applicants": 15568,
+        "univ_rate": 71.3
+      },
+      "27": {
+        "graduates": 68065,
+        "univ_applicants": 45305,
+        "univ_rate": 66.6
+      },
+      "28": {
+        "graduates": 42454,
+        "univ_applicants": 28004,
+        "univ_rate": 66.0
+      },
+      "29": {
+        "graduates": 10939,
+        "univ_applicants": 6935,
+        "univ_rate": 63.4
+      },
+      "30": {
+        "graduates": 7816,
+        "univ_applicants": 4377,
+        "univ_rate": 56.0
+      },
+      "31": {
+        "graduates": 4679,
+        "univ_applicants": 2252,
+        "univ_rate": 48.1
+      },
+      "32": {
+        "graduates": 5554,
+        "univ_applicants": 2730,
+        "univ_rate": 49.2
+      },
+      "33": {
+        "graduates": 16274,
+        "univ_applicants": 8940,
+        "univ_rate": 54.9
+      },
+      "34": {
+        "graduates": 22196,
+        "univ_applicants": 14168,
+        "univ_rate": 63.8
+      },
+      "35": {
+        "graduates": 10260,
+        "univ_applicants": 4674,
+        "univ_rate": 45.6
+      },
+      "36": {
+        "graduates": 5742,
+        "univ_applicants": 3319,
+        "univ_rate": 57.8
+      },
+      "37": {
+        "graduates": 8069,
+        "univ_applicants": 4556,
+        "univ_rate": 56.5
+      },
+      "38": {
+        "graduates": 10536,
+        "univ_applicants": 5884,
+        "univ_rate": 55.8
+      },
+      "39": {
+        "graduates": 5536,
+        "univ_applicants": 2968,
+        "univ_rate": 53.6
+      },
+      "40": {
+        "graduates": 39841,
+        "univ_applicants": 22797,
+        "univ_rate": 57.2
+      },
+      "41": {
+        "graduates": 7440,
+        "univ_applicants": 3476,
+        "univ_rate": 46.7
+      },
+      "42": {
+        "graduates": 11283,
+        "univ_applicants": 5521,
+        "univ_rate": 48.9
+      },
+      "43": {
+        "graduates": 14388,
+        "univ_applicants": 6899,
+        "univ_rate": 47.9
+      },
+      "44": {
+        "graduates": 9417,
+        "univ_applicants": 4747,
+        "univ_rate": 50.4
+      },
+      "45": {
+        "graduates": 9272,
+        "univ_applicants": 4328,
+        "univ_rate": 46.7
+      },
+      "46": {
+        "graduates": 13764,
+        "univ_applicants": 6405,
+        "univ_rate": 46.5
+      },
+      "47": {
+        "graduates": 13820,
+        "univ_applicants": 6160,
+        "univ_rate": 44.6
+      }
+    },
+    "2023": {
+      "01": {
+        "graduates": 36375,
+        "univ_applicants": 18749,
+        "univ_rate": 51.5
+      },
+      "02": {
+        "graduates": 9804,
+        "univ_applicants": 5243,
+        "univ_rate": 53.5
+      },
+      "03": {
+        "graduates": 9604,
+        "univ_applicants": 4569,
+        "univ_rate": 47.6
+      },
+      "04": {
+        "graduates": 17714,
+        "univ_applicants": 9785,
+        "univ_rate": 55.2
+      },
+      "05": {
+        "graduates": 6991,
+        "univ_applicants": 3324,
+        "univ_rate": 47.5
+      },
+      "06": {
+        "graduates": 8767,
+        "univ_applicants": 4282,
+        "univ_rate": 48.8
+      },
+      "07": {
+        "graduates": 14494,
+        "univ_applicants": 7265,
+        "univ_rate": 50.1
+      },
+      "08": {
+        "graduates": 23287,
+        "univ_applicants": 13042,
+        "univ_rate": 56.0
+      },
+      "09": {
+        "graduates": 15803,
+        "univ_applicants": 8985,
+        "univ_rate": 56.9
+      },
+      "10": {
+        "graduates": 15541,
+        "univ_applicants": 8878,
+        "univ_rate": 57.1
+      },
+      "11": {
+        "graduates": 52446,
+        "univ_applicants": 33885,
+        "univ_rate": 64.6
+      },
+      "12": {
+        "graduates": 45820,
+        "univ_applicants": 28642,
+        "univ_rate": 62.5
+      },
+      "13": {
+        "graduates": 96812,
+        "univ_applicants": 70463,
+        "univ_rate": 72.8
+      },
+      "14": {
+        "graduates": 62649,
+        "univ_applicants": 42649,
+        "univ_rate": 68.1
+      },
+      "15": {
+        "graduates": 16473,
+        "univ_applicants": 8733,
+        "univ_rate": 53.0
+      },
+      "16": {
+        "graduates": 8308,
+        "univ_applicants": 4774,
+        "univ_rate": 57.5
+      },
+      "17": {
+        "graduates": 9376,
+        "univ_applicants": 5649,
+        "univ_rate": 60.2
+      },
+      "18": {
+        "graduates": 6667,
+        "univ_applicants": 4179,
+        "univ_rate": 62.7
+      },
+      "19": {
+        "graduates": 7268,
+        "univ_applicants": 4449,
+        "univ_rate": 61.2
+      },
+      "20": {
+        "graduates": 16757,
+        "univ_applicants": 9095,
+        "univ_rate": 54.3
+      },
+      "21": {
+        "graduates": 16124,
+        "univ_applicants": 9681,
+        "univ_rate": 60.0
+      },
+      "22": {
+        "graduates": 29624,
+        "univ_applicants": 16974,
+        "univ_rate": 57.3
+      },
+      "23": {
+        "graduates": 59717,
+        "univ_applicants": 37512,
+        "univ_rate": 62.8
+      },
+      "24": {
+        "graduates": 14108,
+        "univ_applicants": 7724,
+        "univ_rate": 54.7
+      },
+      "25": {
+        "graduates": 11735,
+        "univ_applicants": 7231,
+        "univ_rate": 61.6
+      },
+      "26": {
+        "graduates": 21359,
+        "univ_applicants": 15598,
+        "univ_rate": 73.0
+      },
+      "27": {
+        "graduates": 66415,
+        "univ_applicants": 44886,
+        "univ_rate": 67.6
+      },
+      "28": {
+        "graduates": 41408,
+        "univ_applicants": 27767,
+        "univ_rate": 67.1
+      },
+      "29": {
+        "graduates": 10341,
+        "univ_applicants": 6672,
+        "univ_rate": 64.5
+      },
+      "30": {
+        "graduates": 7289,
+        "univ_applicants": 4158,
+        "univ_rate": 57.0
+      },
+      "31": {
+        "graduates": 4590,
+        "univ_applicants": 2389,
+        "univ_rate": 52.0
+      },
+      "32": {
+        "graduates": 5512,
+        "univ_applicants": 2756,
+        "univ_rate": 50.0
+      },
+      "33": {
+        "graduates": 15822,
+        "univ_applicants": 9020,
+        "univ_rate": 57.0
+      },
+      "34": {
+        "graduates": 21634,
+        "univ_applicants": 13982,
+        "univ_rate": 64.6
+      },
+      "35": {
+        "graduates": 9980,
+        "univ_applicants": 4684,
+        "univ_rate": 46.9
+      },
+      "36": {
+        "graduates": 5502,
+        "univ_applicants": 3279,
+        "univ_rate": 59.6
+      },
+      "37": {
+        "graduates": 7988,
+        "univ_applicants": 4661,
+        "univ_rate": 58.4
+      },
+      "38": {
+        "graduates": 9990,
+        "univ_applicants": 5623,
+        "univ_rate": 56.3
+      },
+      "39": {
+        "graduates": 5412,
+        "univ_applicants": 3031,
+        "univ_rate": 56.0
+      },
+      "40": {
+        "graduates": 39195,
+        "univ_applicants": 22917,
+        "univ_rate": 58.5
+      },
+      "41": {
+        "graduates": 7140,
+        "univ_applicants": 3418,
+        "univ_rate": 47.9
+      },
+      "42": {
+        "graduates": 10933,
+        "univ_applicants": 5297,
+        "univ_rate": 48.4
+      },
+      "43": {
+        "graduates": 14007,
+        "univ_applicants": 6865,
+        "univ_rate": 49.0
+      },
+      "44": {
+        "graduates": 9143,
+        "univ_applicants": 4772,
+        "univ_rate": 52.2
+      },
+      "45": {
+        "graduates": 9129,
+        "univ_applicants": 4434,
+        "univ_rate": 48.6
+      },
+      "46": {
+        "graduates": 13328,
+        "univ_applicants": 6187,
+        "univ_rate": 46.4
+      },
+      "47": {
+        "graduates": 13628,
+        "univ_applicants": 6307,
+        "univ_rate": 46.3
+      }
+    },
+    "2024": {
+      "01": {
+        "graduates": 34467,
+        "univ_applicants": 18201,
+        "univ_rate": 52.8
+      },
+      "02": {
+        "graduates": 9011,
+        "univ_applicants": 4899,
+        "univ_rate": 54.4
+      },
+      "03": {
+        "graduates": 9020,
+        "univ_applicants": 4502,
+        "univ_rate": 49.9
+      },
+      "04": {
+        "graduates": 16818,
+        "univ_applicants": 9374,
+        "univ_rate": 55.7
+      },
+      "05": {
+        "graduates": 6553,
+        "univ_applicants": 3240,
+        "univ_rate": 49.4
+      },
+      "06": {
+        "graduates": 8236,
+        "univ_applicants": 4197,
+        "univ_rate": 51.0
+      },
+      "07": {
+        "graduates": 13861,
+        "univ_applicants": 7068,
+        "univ_rate": 51.0
+      },
+      "08": {
+        "graduates": 21932,
+        "univ_applicants": 12606,
+        "univ_rate": 57.5
+      },
+      "09": {
+        "graduates": 15427,
+        "univ_applicants": 8791,
+        "univ_rate": 57.0
+      },
+      "10": {
+        "graduates": 14726,
+        "univ_applicants": 8460,
+        "univ_rate": 57.4
+      },
+      "11": {
+        "graduates": 50543,
+        "univ_applicants": 33303,
+        "univ_rate": 65.9
+      },
+      "12": {
+        "graduates": 43039,
+        "univ_applicants": 27872,
+        "univ_rate": 64.8
+      },
+      "13": {
+        "graduates": 93495,
+        "univ_applicants": 69369,
+        "univ_rate": 74.2
+      },
+      "14": {
+        "graduates": 60088,
+        "univ_applicants": 41722,
+        "univ_rate": 69.4
+      },
+      "15": {
+        "graduates": 15579,
+        "univ_applicants": 8428,
+        "univ_rate": 54.1
+      },
+      "16": {
+        "graduates": 8040,
+        "univ_applicants": 4699,
+        "univ_rate": 58.4
+      },
+      "17": {
+        "graduates": 8990,
+        "univ_applicants": 5638,
+        "univ_rate": 62.7
+      },
+      "18": {
+        "graduates": 6515,
+        "univ_applicants": 3992,
+        "univ_rate": 61.3
+      },
+      "19": {
+        "graduates": 6988,
+        "univ_applicants": 4360,
+        "univ_rate": 62.4
+      },
+      "20": {
+        "graduates": 16085,
+        "univ_applicants": 8919,
+        "univ_rate": 55.4
+      },
+      "21": {
+        "graduates": 15520,
+        "univ_applicants": 9504,
+        "univ_rate": 61.2
+      },
+      "22": {
+        "graduates": 28128,
+        "univ_applicants": 16359,
+        "univ_rate": 58.2
+      },
+      "23": {
+        "graduates": 56956,
+        "univ_applicants": 36457,
+        "univ_rate": 64.0
+      },
+      "24": {
+        "graduates": 13451,
+        "univ_applicants": 7458,
+        "univ_rate": 55.4
+      },
+      "25": {
+        "graduates": 11326,
+        "univ_applicants": 6996,
+        "univ_rate": 61.8
+      },
+      "26": {
+        "graduates": 20757,
+        "univ_applicants": 15370,
+        "univ_rate": 74.0
+      },
+      "27": {
+        "graduates": 62697,
+        "univ_applicants": 43229,
+        "univ_rate": 68.9
+      },
+      "28": {
+        "graduates": 39100,
+        "univ_applicants": 26813,
+        "univ_rate": 68.6
+      },
+      "29": {
+        "graduates": 9791,
+        "univ_applicants": 6382,
+        "univ_rate": 65.2
+      },
+      "30": {
+        "graduates": 7074,
+        "univ_applicants": 4045,
+        "univ_rate": 57.2
+      },
+      "31": {
+        "graduates": 4407,
+        "univ_applicants": 2268,
+        "univ_rate": 51.5
+      },
+      "32": {
+        "graduates": 5253,
+        "univ_applicants": 2635,
+        "univ_rate": 50.2
+      },
+      "33": {
+        "graduates": 15022,
+        "univ_applicants": 8546,
+        "univ_rate": 56.9
+      },
+      "34": {
+        "graduates": 20902,
+        "univ_applicants": 13736,
+        "univ_rate": 65.7
+      },
+      "35": {
+        "graduates": 9331,
+        "univ_applicants": 4537,
+        "univ_rate": 48.6
+      },
+      "36": {
+        "graduates": 5063,
+        "univ_applicants": 3024,
+        "univ_rate": 59.7
+      },
+      "37": {
+        "graduates": 7552,
+        "univ_applicants": 4419,
+        "univ_rate": 58.5
+      },
+      "38": {
+        "graduates": 9379,
+        "univ_applicants": 5412,
+        "univ_rate": 57.7
+      },
+      "39": {
+        "graduates": 5244,
+        "univ_applicants": 3029,
+        "univ_rate": 57.8
+      },
+      "40": {
+        "graduates": 38113,
+        "univ_applicants": 22401,
+        "univ_rate": 58.8
+      },
+      "41": {
+        "graduates": 6843,
+        "univ_applicants": 3313,
+        "univ_rate": 48.4
+      },
+      "42": {
+        "graduates": 10489,
+        "univ_applicants": 5221,
+        "univ_rate": 49.8
+      },
+      "43": {
+        "graduates": 13401,
+        "univ_applicants": 6759,
+        "univ_rate": 50.4
+      },
+      "44": {
+        "graduates": 8832,
+        "univ_applicants": 4601,
+        "univ_rate": 52.1
+      },
+      "45": {
+        "graduates": 8786,
+        "univ_applicants": 4229,
+        "univ_rate": 48.1
+      },
+      "46": {
+        "graduates": 12998,
+        "univ_applicants": 6262,
+        "univ_rate": 48.2
+      },
+      "47": {
+        "graduates": 13022,
+        "univ_applicants": 6084,
+        "univ_rate": 46.7
       }
     }
   }
