@@ -483,7 +483,7 @@
   <!-- Panel: Detail -->
   <div class="panel" id="panel-detail">
     <div class="card">
-      <div class="card-title">全都道府県データ</div>
+      <div class="card-title" id="detailTitle">全都道府県データ</div>
       <div class="card-subtitle" id="detailSubtitle"></div>
       <div class="table-scroll">
         <table class="data-table" id="detailTable">
@@ -961,8 +961,13 @@ function renderCompare(year, cat) {
 // 詳細テーブル
 // ============================================================
 function renderDetail(data, univName, yearName) {
+  const univPref = document.getElementById('selUnivPref').value;
+  const univCount = UNIV_CAPACITY[univPref] ? UNIV_CAPACITY[univPref].total + '校' : '';
+
+  document.getElementById('detailTitle').textContent = 
+    `${univName}所在の全大学${univCount ? '（' + univCount + '）' : ''}の入学者 出身高校所在地`;
   document.getElementById('detailSubtitle').textContent = 
-    `${univName}所在大学 ${yearName}`;
+    `${yearName} — ${univName}にある国公私立大学すべての合計。個別大学の内訳ではありません`;
 
   const total = data['00'] || 0;
   const tbody = document.getElementById('detailTableBody');
