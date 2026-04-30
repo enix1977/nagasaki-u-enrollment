@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>入学者出身地分析 — 学校基本調査データ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap');
+
+  :root {
+    --bg: #f5f3ef;
+    --surface: #ffffff;
+    --surface-alt: #faf9f7;
+    --border: #e0dcd5;
+    --text: #1a1815;
+    --text-secondary: #6b6560;
+    --accent: #2d5a27;
+    --accent-light: #e8f0e6;
+    --accent-dark: #1e3d1a;
+    --highlight: #d4a853;
+    --highlight-light: #fdf6e8;
+    --danger: #c0392b;
+    --nagasaki: #2d5a27;
+    --fukuoka: #2874a6;
+    --kumamoto: #8e44ad;
+    --saga: #d4a853;
+    --oita: #e67e22;
+    --chart-1: #2d5a27;
+    --chart-2: #2874a6;
+    --chart-3: #8e44ad;
+    --chart-4: #d4a853;
+    --chart-5: #e67e22;
+    --chart-6: #c0392b;
+    --chart-7: #16a085;
+    --chart-8: #7f8c8d;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  /* Header */
+  .header {
+    background: var(--accent-dark);
+    color: #fff;
+    padding: 24px 32px;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .header p {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-top: 4px;
+  }
+
+  /* Notice banner */
+  .notice {
+    background: var(--highlight-light);
+    border-bottom: 1px solid #e8d9a8;
+    padding: 10px 32px;
+    font-size: 13px;
+    color: #8b6914;
+    display: none;
+  }
+  .notice.visible { display: block; }
+
+  /* Layout */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 32px;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .control-group label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .control-group select {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    padding: 8px 32px 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b6560' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    min-width: 180px;
+  }
+  .control-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-light);
+  }
+
+  /* Tab navigation */
+  .tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--border);
+  }
+  .tab {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    font-family: 'Noto Sans JP', sans-serif;
+    transition: color 0.2s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    color: var(--accent-dark);
+    font-weight: 700;
+  }
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent-dark);
+  }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+  .card-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+  }
+
+  /* KPI row */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+  .kpi-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .kpi-value {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent-dark);
+    line-height: 1.2;
+  }
+  .kpi-value .unit {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-left: 2px;
+  }
+  .kpi-change {
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .kpi-change.positive { color: var(--accent); }
+  .kpi-change.negative { color: var(--danger); }
+
+  /* Chart container */
+  .chart-container {
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+  }
+  .chart-container canvas {
+    max-width: 100%;
+  }
+
+  /* Bar chart (CSS-based) */
+  .bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .bar-label {
+    min-width: 80px;
+    font-size: 13px;
+    text-align: right;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+  .bar-label.highlight {
+    color: var(--accent-dark);
+    font-weight: 700;
+  }
+  .bar-track {
+    flex: 1;
+    height: 24px;
+    background: var(--surface-alt);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+    min-width: 2px;
+  }
+  .bar-value {
+    min-width: 60px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: right;
+  }
+  .bar-value.highlight {
+    color: var(--accent-dark);
+    font-weight: 700;
+  }
+
+  /* Table */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .data-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--surface-alt);
+    border-bottom: 2px solid var(--border);
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  .data-table th.num { text-align: right; }
+  .data-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .data-table tr:hover td { background: var(--accent-light); }
+  .data-table tr.highlight td {
+    background: var(--accent-light);
+    font-weight: 700;
+  }
+  .table-scroll {
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  /* Trend sparkline */
+  .trend-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .trend-line svg {
+    vertical-align: middle;
+  }
+
+  /* Panels */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Grid layout */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 768px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .container { padding: 16px; }
+    .header { padding: 16px; }
+    .controls { flex-direction: column; }
+    .control-group select { min-width: unset; width: 100%; }
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 24px 32px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* Loading */
+  .loading {
+    text-align: center;
+    padding: 60px;
+    color: var(--text-secondary);
+  }
+  .loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>入学者出身地分析ダッシュボード</h1>
+  <p>学校基本調査「出身高校の所在地県別 入学者数」e-Stat APIデータ</p>
+</div>
+
+<div class="notice" id="notice">
+  ⚠ サンプルデータで表示しています。実データを使うには fetch_estat_data.py を実行してください。
+</div>
+
+<div class="container">
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="control-group">
+      <label>大学所在地</label>
+      <select id="selUnivPref"></select>
+    </div>
+    <div class="control-group">
+      <label>年度</label>
+      <select id="selYear"></select>
+    </div>
+    <div class="control-group">
+      <label>設置者区分</label>
+      <select id="selCategory"></select>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" data-panel="overview">概要</button>
+    <button class="tab" data-panel="compare">県間比較</button>
+    <button class="tab" data-panel="detail">詳細テーブル</button>
+  </div>
+
+  <!-- Panel: Overview -->
+  <div class="panel active" id="panel-overview">
+    <div class="kpi-row" id="kpiRow"></div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">出身高校所在地 上位</div>
+        <div class="card-subtitle" id="barChartSubtitle"></div>
+        <div id="barChart" class="bar-chart"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">九州各県からの入学者構成</div>
+        <div class="card-subtitle">九州・沖縄8県の内訳</div>
+        <div id="kyushuChart" class="bar-chart"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">経年推移（県内高校出身者数）</div>
+      <div class="card-subtitle" id="trendSubtitle"></div>
+      <div class="chart-container" id="trendChart"></div>
+    </div>
+  </div>
+
+  <!-- Panel: Compare -->
+  <div class="panel" id="panel-compare">
+    <div class="card">
+      <div class="card-title">九州各県の大学 — 長崎県高校出身者の獲得数</div>
+      <div class="card-subtitle">長崎県の高校出身者がどの県の大学に進学しているか</div>
+      <div id="compareChart" class="bar-chart"></div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">逆引き — 九州各県大学の出身地構成</div>
+      <div class="card-subtitle">九州各県の大学が、どの県から学生を集めているか</div>
+      <div class="table-scroll">
+        <table class="data-table" id="compareTable">
+          <thead><tr id="compareTableHead"></tr></thead>
+          <tbody id="compareTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Detail -->
+  <div class="panel" id="panel-detail">
+    <div class="card">
+      <div class="card-title">全都道府県データ</div>
+      <div class="card-subtitle" id="detailSubtitle"></div>
+      <div class="table-scroll">
+        <table class="data-table" id="detailTable">
+          <thead>
+            <tr>
+              <th>出身高校所在地</th>
+              <th class="num">入学者数</th>
+              <th class="num">構成比</th>
+            </tr>
+          </thead>
+          <tbody id="detailTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  データ出典: <a href="https://www.e-stat.go.jp/" target="_blank">e-Stat 政府統計の総合窓口</a>
+   — 学校基本調査「出身高校の所在地県別 入学者数」<br>
+  このコンテンツは「政府統計の総合窓口(e-Stat)」のAPI機能を使用していますが、サービスの内容は国によって保証されたものではありません。
+</div>
+
+<script>
+// ============================================================
+// アプリケーション本体
+// ============================================================
+
+const KYUSHU_PREFS = ['40','41','42','43','44','45','46','47'];
+const KYUSHU_NAMES = {
+  '40':'福岡','41':'佐賀','42':'長崎','43':'熊本',
+  '44':'大分','45':'宮崎','46':'鹿児島','47':'沖縄'
+};
+const KYUSHU_COLORS = {
+  '40':'#2874a6','41':'#d4a853','42':'#2d5a27','43':'#8e44ad',
+  '44':'#e67e22','45':'#16a085','46':'#c0392b','47':'#7f8c8d'
+};
+
+const CHART_COLORS = [
+  '#2d5a27','#2874a6','#8e44ad','#d4a853','#e67e22',
+  '#c0392b','#16a085','#7f8c8d','#34495e','#f39c12',
+  '#1abc9c','#e74c3c','#3498db','#9b59b6','#e67e22'
+];
+
+let DATA = null;
+
+// ============================================================
+// データ読み込み
+// ============================================================
+async function loadData() {
+  try {
+    const res = await fetch('estat_data.json');
+    if (!res.ok) throw new Error('estat_data.json が見つかりません');
+    DATA = await res.json();
+
+    // サンプルデータ判定
+    if (DATA._comment) {
+      document.getElementById('notice').classList.add('visible');
+    }
+
+    initControls();
+    render();
+  } catch (e) {
+    document.querySelector('.container').innerHTML = `
+      <div class="loading">
+        <p style="font-size:16px;font-weight:700;margin-bottom:8px;">データファイルが見つかりません</p>
+        <p>estat_data.json をこのHTMLと同じフォルダに置いてください。</p>
+        <p style="margin-top:12px;">取得方法: <code>python fetch_estat_data.py</code></p>
+      </div>
+    `;
+  }
+}
+
+// ============================================================
+// コントロール初期化
+// ============================================================
+function initControls() {
+  const selUniv = document.getElementById('selUnivPref');
+  const selYear = document.getElementById('selYear');
+  const selCat  = document.getElementById('selCategory');
+
+  // 大学所在地（九州を先頭に表示）
+  const univPrefs = Object.keys(DATA.univ_prefectures);
+  const kyushuFirst = KYUSHU_PREFS.filter(k => univPrefs.includes(k));
+  const others = univPrefs.filter(k => !KYUSHU_PREFS.includes(k) && k !== '00');
+
+  addOption(selUniv, '00', '全国（計）');
+  if (kyushuFirst.length > 0) {
+    const og = document.createElement('optgroup');
+    og.label = '九州・沖縄';
+    kyushuFirst.forEach(k => {
+      const o = document.createElement('option');
+      o.value = k;
+      o.textContent = DATA.univ_prefectures[k];
+      og.appendChild(o);
+    });
+    selUniv.appendChild(og);
+  }
+  if (others.length > 0) {
+    const og = document.createElement('optgroup');
+    og.label = 'その他';
+    others.forEach(k => {
+      const o = document.createElement('option');
+      o.value = k;
+      o.textContent = DATA.univ_prefectures[k];
+      og.appendChild(o);
+    });
+    selUniv.appendChild(og);
+  }
+
+  // 長崎県をデフォルトに
+  if (univPrefs.includes('42')) selUniv.value = '42';
+
+  // 年度
+  const years = Object.keys(DATA.years).sort((a,b) => b.localeCompare(a));
+  years.forEach(k => addOption(selYear, k, DATA.years[k]));
+
+  // 設置者区分
+  Object.entries(DATA.categories).forEach(([k,v]) => addOption(selCat, k, v));
+
+  // イベント
+  selUniv.addEventListener('change', render);
+  selYear.addEventListener('change', render);
+  selCat.addEventListener('change', render);
+
+  // タブ
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+    });
+  });
+}
+
+function addOption(select, value, text) {
+  const o = document.createElement('option');
+  o.value = value;
+  o.textContent = text;
+  select.appendChild(o);
+}
+
+// ============================================================
+// メインレンダー
+// ============================================================
+function render() {
+  const univPref = document.getElementById('selUnivPref').value;
+  const year     = document.getElementById('selYear').value;
+  const cat      = document.getElementById('selCategory').value;
+
+  const univName = DATA.univ_prefectures[univPref] || univPref;
+  const yearName = DATA.years[year] || year;
+
+  // 該当データ取得
+  const yearData = DATA.data?.[year]?.[cat]?.[univPref] || {};
+
+  renderKPI(yearData, univPref, year, cat, univName, yearName);
+  renderBarChart(yearData, univName, yearName);
+  renderKyushuChart(yearData, univName);
+  renderTrend(univPref, cat, univName);
+  renderCompare(year, cat);
+  renderDetail(yearData, univName, yearName);
+}
+
+// ============================================================
+// KPI
+// ============================================================
+function renderKPI(data, univPref, year, cat, univName, yearName) {
+  const total = data['00'] || 0;
+
+  // 県内率
+  const local = data[univPref] || 0;
+  const localRate = total > 0 ? (local / total * 100).toFixed(1) : '—';
+
+  // 九州計
+  const kyushuTotal = KYUSHU_PREFS.reduce((s,k) => s + (data[k]||0), 0);
+  const kyushuRate = total > 0 ? (kyushuTotal / total * 100).toFixed(1) : '—';
+
+  // 前年比
+  const prevYears = Object.keys(DATA.years).sort((a,b) => b.localeCompare(a));
+  const yi = prevYears.indexOf(year);
+  let prevTotal = null;
+  if (yi >= 0 && yi < prevYears.length - 1) {
+    const prevYear = prevYears[yi + 1];
+    const prevData = DATA.data?.[prevYear]?.[cat]?.[univPref] || {};
+    prevTotal = prevData['00'] || null;
+  }
+
+  let changeHtml = '';
+  if (prevTotal !== null && prevTotal > 0) {
+    const diff = total - prevTotal;
+    const pct = ((diff / prevTotal) * 100).toFixed(1);
+    const cls = diff >= 0 ? 'positive' : 'negative';
+    const sign = diff >= 0 ? '+' : '';
+    changeHtml = `<div class="kpi-change ${cls}">前年比 ${sign}${diff}人（${sign}${pct}%）</div>`;
+  }
+
+  document.getElementById('kpiRow').innerHTML = `
+    <div class="kpi">
+      <div class="kpi-label">入学者総数（${yearName}）</div>
+      <div class="kpi-value">${total.toLocaleString()}<span class="unit">人</span></div>
+      ${changeHtml}
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">${univName}高校出身（県内率）</div>
+      <div class="kpi-value">${local.toLocaleString()}<span class="unit">人</span></div>
+      <div class="kpi-change">${localRate}%</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">九州・沖縄出身</div>
+      <div class="kpi-value">${kyushuTotal.toLocaleString()}<span class="unit">人</span></div>
+      <div class="kpi-change">${kyushuRate}%</div>
+    </div>
+  `;
+}
+
+// ============================================================
+// 上位バーチャート
+// ============================================================
+function renderBarChart(data, univName, yearName) {
+  document.getElementById('barChartSubtitle').textContent =
+    `${univName}所在大学 ${yearName} — 上位15県`;
+
+  // ソート（計を除く）
+  const entries = Object.entries(data)
+    .filter(([k]) => k !== '00' && k !== '48')
+    .map(([k,v]) => ({ code:k, name: DATA.hs_prefectures[k]||k, value:v }))
+    .sort((a,b) => b.value - a.value)
+    .slice(0, 15);
+
+  const maxVal = entries.length > 0 ? entries[0].value : 1;
+  const univPref = document.getElementById('selUnivPref').value;
+
+  document.getElementById('barChart').innerHTML = entries.map(e => {
+    const pct = (e.value / maxVal * 100).toFixed(1);
+    const isLocal = e.code === univPref;
+    const color = KYUSHU_COLORS[e.code] || '#7f8c8d';
+    return `
+      <div class="bar-row">
+        <div class="bar-label ${isLocal?'highlight':''}">${e.name}</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${pct}%;background:${color};"></div>
+        </div>
+        <div class="bar-value ${isLocal?'highlight':''}">${e.value.toLocaleString()}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============================================================
+// 九州内訳
+// ============================================================
+function renderKyushuChart(data, univName) {
+  const entries = KYUSHU_PREFS
+    .map(k => ({ code:k, name: KYUSHU_NAMES[k], value: data[k]||0 }))
+    .sort((a,b) => b.value - a.value);
+
+  const maxVal = Math.max(...entries.map(e => e.value), 1);
+  const univPref = document.getElementById('selUnivPref').value;
+
+  document.getElementById('kyushuChart').innerHTML = entries.map(e => {
+    const pct = (e.value / maxVal * 100).toFixed(1);
+    const isLocal = e.code === univPref;
+    return `
+      <div class="bar-row">
+        <div class="bar-label ${isLocal?'highlight':''}">${e.name}</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${pct}%;background:${KYUSHU_COLORS[e.code]};"></div>
+        </div>
+        <div class="bar-value ${isLocal?'highlight':''}">${e.value.toLocaleString()}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============================================================
+// 経年推移
+// ============================================================
+function renderTrend(univPref, cat, univName) {
+  const years = Object.keys(DATA.years).sort();
+  const container = document.getElementById('trendChart');
+  document.getElementById('trendSubtitle').textContent = 
+    `${univName}所在大学の県内高校出身者の推移`;
+
+  if (years.length < 2) {
+    container.innerHTML = '<p style="color:var(--text-secondary);text-align:center;padding:40px;">推移表示には2年度以上のデータが必要です</p>';
+    return;
+  }
+
+  const values = years.map(y => {
+    const d = DATA.data?.[y]?.[cat]?.[univPref] || {};
+    return { year: DATA.years[y], total: d['00']||0, local: d[univPref]||0 };
+  });
+
+  // SVGで簡易折れ線グラフ
+  const W = 600, H = 250, PAD = { t:20, r:30, b:40, l:60 };
+  const plotW = W - PAD.l - PAD.r;
+  const plotH = H - PAD.t - PAD.b;
+
+  const allVals = values.flatMap(v => [v.total, v.local]).filter(v => v > 0);
+  const yMax = Math.max(...allVals) * 1.1 || 100;
+  const yMin = 0;
+
+  function x(i) { return PAD.l + (i / (values.length - 1)) * plotW; }
+  function y(v) { return PAD.t + (1 - (v - yMin) / (yMax - yMin)) * plotH; }
+
+  // Grid lines
+  const gridLines = 5;
+  let gridSvg = '';
+  for (let i = 0; i <= gridLines; i++) {
+    const val = yMin + (yMax - yMin) * (i / gridLines);
+    const yy = y(val);
+    gridSvg += `<line x1="${PAD.l}" y1="${yy}" x2="${W-PAD.r}" y2="${yy}" stroke="#e0dcd5" stroke-width="1"/>`;
+    gridSvg += `<text x="${PAD.l-8}" y="${yy+4}" text-anchor="end" fill="#6b6560" font-size="11">${Math.round(val).toLocaleString()}</text>`;
+  }
+
+  // Total line
+  const totalPath = values.map((v,i) => `${i===0?'M':'L'}${x(i)},${y(v.total)}`).join(' ');
+  // Local line
+  const localPath = values.map((v,i) => `${i===0?'M':'L'}${x(i)},${y(v.local)}`).join(' ');
+
+  // X labels
+  let xLabels = values.map((v,i) => 
+    `<text x="${x(i)}" y="${H-8}" text-anchor="middle" fill="#6b6560" font-size="11">${v.year.replace('年','')}</text>`
+  ).join('');
+
+  // Dots
+  let dots = '';
+  values.forEach((v,i) => {
+    dots += `<circle cx="${x(i)}" cy="${y(v.total)}" r="4" fill="#2874a6" stroke="#fff" stroke-width="2"/>`;
+    dots += `<circle cx="${x(i)}" cy="${y(v.local)}" r="4" fill="#2d5a27" stroke="#fff" stroke-width="2"/>`;
+  });
+
+  container.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;font-family:'Noto Sans JP',sans-serif;">
+      ${gridSvg}
+      <path d="${totalPath}" fill="none" stroke="#2874a6" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="${localPath}" fill="none" stroke="#2d5a27" stroke-width="2.5" stroke-linejoin="round"/>
+      ${dots}
+      ${xLabels}
+    </svg>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#2874a6;"></div> 入学者総数</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2d5a27;"></div> 県内高校出身</div>
+    </div>
+  `;
+}
+
+// ============================================================
+// 県間比較
+// ============================================================
+function renderCompare(year, cat) {
+  // 長崎県高校出身者が各県大学にどれだけいるか
+  const entries = KYUSHU_PREFS
+    .map(k => {
+      const d = DATA.data?.[year]?.[cat]?.[k] || {};
+      return { code:k, name: KYUSHU_NAMES[k], value: d['42']||0, total: d['00']||0 };
+    })
+    .sort((a,b) => b.value - a.value);
+
+  const maxVal = Math.max(...entries.map(e => e.value), 1);
+
+  document.getElementById('compareChart').innerHTML = entries.map(e => {
+    const pct = (e.value / maxVal * 100).toFixed(1);
+    return `
+      <div class="bar-row">
+        <div class="bar-label ${e.code==='42'?'highlight':''}">${e.name}の大学</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${pct}%;background:${KYUSHU_COLORS[e.code]};"></div>
+        </div>
+        <div class="bar-value ${e.code==='42'?'highlight':''}">${e.value.toLocaleString()}</div>
+      </div>
+    `;
+  }).join('');
+
+  // テーブル: 各大学所在地 × 出身高校所在地
+  const thead = document.getElementById('compareTableHead');
+  const tbody = document.getElementById('compareTableBody');
+
+  thead.innerHTML = '<th>大学所在地＼出身</th>' +
+    KYUSHU_PREFS.map(k => `<th class="num">${KYUSHU_NAMES[k]}</th>`).join('') +
+    '<th class="num">計</th>';
+
+  tbody.innerHTML = KYUSHU_PREFS.map(uk => {
+    const d = DATA.data?.[year]?.[cat]?.[uk] || {};
+    const total = d['00'] || 0;
+    const isNagasaki = uk === '42';
+    return `<tr class="${isNagasaki?'highlight':''}">
+      <td>${KYUSHU_NAMES[uk]}の大学</td>
+      ${KYUSHU_PREFS.map(hk => `<td class="num">${(d[hk]||0).toLocaleString()}</td>`).join('')}
+      <td class="num" style="font-weight:700;">${total.toLocaleString()}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ============================================================
+// 詳細テーブル
+// ============================================================
+function renderDetail(data, univName, yearName) {
+  document.getElementById('detailSubtitle').textContent = 
+    `${univName}所在大学 ${yearName}`;
+
+  const total = data['00'] || 0;
+  const tbody = document.getElementById('detailTableBody');
+  const univPref = document.getElementById('selUnivPref').value;
+
+  const entries = Object.entries(data)
+    .filter(([k]) => k !== '00')
+    .map(([k,v]) => ({ code:k, name: DATA.hs_prefectures[k]||k, value:v }))
+    .sort((a,b) => b.value - a.value);
+
+  tbody.innerHTML = entries.map(e => {
+    const pct = total > 0 ? (e.value / total * 100).toFixed(1) : '—';
+    const isLocal = e.code === univPref;
+    return `<tr class="${isLocal?'highlight':''}">
+      <td>${e.name}</td>
+      <td class="num">${e.value.toLocaleString()}</td>
+      <td class="num">${pct}%</td>
+    </tr>`;
+  }).join('');
+
+  // 合計行
+  tbody.innerHTML += `<tr style="font-weight:700;background:var(--surface-alt);">
+    <td>合計</td>
+    <td class="num">${total.toLocaleString()}</td>
+    <td class="num">100.0%</td>
+  </tr>`;
+}
+
+// ============================================================
+// 起動
+// ============================================================
+document.addEventListener('DOMContentLoaded', loadData);
+</script>
+</body>
+</html>
