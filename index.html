@@ -550,20 +550,11 @@
   <div class="panel" id="panel-univcomp">
     <div class="card">
       <div class="card-title">大学入学定員と充足率（九州各県）</div>
-      <div class="card-subtitle">大学定員数 ÷ 当該県の大学進学者数。100%未満＝定員が足りず学生が外に出る</div>
+      <div class="card-subtitle">大学定員数 ÷ 当該県の大学進学者数。100%未満＝定員が足りず学生が外に出る（列ヘッダーをクリックで並び替え）</div>
       <div class="table-scroll">
         <table class="data-table" id="capacityTable">
           <thead>
-            <tr>
-              <th>県</th>
-              <th class="num">国立</th>
-              <th class="num">公立</th>
-              <th class="num">私立</th>
-              <th class="num">大学数</th>
-              <th class="num">入学定員</th>
-              <th class="num">進学者数</th>
-              <th class="num">充足率</th>
-            </tr>
+            <tr id="capacityTableHead"></tr>
           </thead>
           <tbody id="capacityTableBody"></tbody>
         </table>
@@ -690,7 +681,7 @@ function initControls() {
 
   // イベント
   selUniv.addEventListener('change', render);
-  selYear.addEventListener('change', render);
+  selYear.addEventListener('change', () => { capacitySortUserChanged = false; render(); });
   selCat.addEventListener('change', render);
 
   // タブ
@@ -1227,33 +1218,108 @@ const FACULTY_MATRIX = {
 };
 
 // ============================================================
-// 競合大学タブ描画
+// 競合大学タブ描画（ソート対応）
 // ============================================================
-function renderUnivComp(year, cat) {
-  // === 充足率テーブル ===
-  const gradData = DATA.graduate_data?.[year] || {};
-  const order = ['40','44','42','43','46','45','41','47'];
 
-  const tbody = document.getElementById('capacityTableBody');
-  tbody.innerHTML = order.map(k => {
+// ソート状態管理
+let capacitySortKey = 'rate';    // デフォルト: 充足率
+let capacitySortDir = 'desc';    // デフォルト: 降順
+let capacitySortUserChanged = false; // ユーザーが手動で変更したか
+
+const CAPACITY_COLUMNS = [
+  { key: 'name',       label: '県',       num: false },
+  { key: 'national',   label: '国立',     num: true },
+  { key: 'public',     label: '公立',     num: true },
+  { key: 'private',    label: '私立',     num: true },
+  { key: 'total',      label: '大学数',   num: true },
+  { key: 'capacity',   label: '入学定員', num: true },
+  { key: 'applicants', label: '進学者数', num: true },
+  { key: 'rate',       label: '充足率',   num: true },
+];
+
+function onCapacitySort(key) {
+  if (capacitySortKey === key) {
+    capacitySortDir = capacitySortDir === 'desc' ? 'asc' : 'desc';
+  } else {
+    capacitySortKey = key;
+    capacitySortDir = key === 'name' ? 'asc' : 'desc';
+  }
+  capacitySortUserChanged = true;
+  renderCapacityTable();
+}
+
+function renderCapacityTable() {
+  const year = document.getElementById('selYear').value;
+  const cat  = document.getElementById('selCategory').value;
+  const gradData = DATA.graduate_data?.[year] || {};
+  const prefKeys = ['40','44','42','43','46','45','41','47'];
+
+  // データ構築
+  let rows = prefKeys.map(k => {
     const uc = UNIV_CAPACITY[k];
-    if (!uc) return '';
+    if (!uc) return null;
     const grad = gradData[k] || {};
     const applicants = grad.univ_applicants || 0;
     const rate = applicants > 0 ? Math.round(uc.capacity / applicants * 100) : 0;
-    const isNagasaki = k === '42';
-    const rateColor = rate >= 100 ? 'var(--accent)' : rate >= 70 ? 'var(--highlight)' : 'var(--danger)';
+    return {
+      code: k,
+      name: uc.name,
+      national: uc.national,
+      public: uc.public,
+      private: uc.private,
+      total: uc.total,
+      capacity: uc.capacity,
+      applicants: applicants,
+      rate: rate,
+    };
+  }).filter(Boolean);
+
+  // ソート
+  rows.sort((a, b) => {
+    let va = a[capacitySortKey];
+    let vb = b[capacitySortKey];
+    if (typeof va === 'string') {
+      const cmp = va.localeCompare(vb, 'ja');
+      return capacitySortDir === 'asc' ? cmp : -cmp;
+    }
+    return capacitySortDir === 'asc' ? va - vb : vb - va;
+  });
+
+  // ヘッダー描画
+  const thead = document.getElementById('capacityTableHead');
+  thead.innerHTML = CAPACITY_COLUMNS.map(col => {
+    const isActive = capacitySortKey === col.key;
+    const arrow = isActive ? (capacitySortDir === 'asc' ? ' ▲' : ' ▼') : '';
+    const style = `cursor:pointer;user-select:none;${col.num?'text-align:right;':''}${isActive?'color:var(--accent-dark);':''}`;
+    return `<th style="${style}" onclick="onCapacitySort('${col.key}')">${col.label}${arrow}</th>`;
+  }).join('');
+
+  // ボディ描画
+  const tbody = document.getElementById('capacityTableBody');
+  tbody.innerHTML = rows.map(r => {
+    const isNagasaki = r.code === '42';
+    const rateColor = r.rate >= 100 ? 'var(--accent)' : r.rate >= 70 ? 'var(--highlight)' : 'var(--danger)';
     return `<tr class="${isNagasaki?'highlight':''}">
-      <td>${uc.name}</td>
-      <td class="num">${uc.national}</td>
-      <td class="num">${uc.public}</td>
-      <td class="num">${uc.private}</td>
-      <td class="num">${uc.total}</td>
-      <td class="num">${uc.capacity.toLocaleString()}</td>
-      <td class="num">${applicants > 0 ? applicants.toLocaleString() : '—'}</td>
-      <td class="num" style="font-weight:700;color:${rateColor};">${applicants > 0 ? rate+'%' : '—'}</td>
+      <td>${r.name}</td>
+      <td class="num">${r.national}</td>
+      <td class="num">${r.public}</td>
+      <td class="num">${r.private}</td>
+      <td class="num">${r.total}</td>
+      <td class="num">${r.capacity.toLocaleString()}</td>
+      <td class="num">${r.applicants > 0 ? r.applicants.toLocaleString() : '—'}</td>
+      <td class="num" style="font-weight:700;color:${rateColor};">${r.applicants > 0 ? r.rate+'%' : '—'}</td>
     </tr>`;
   }).join('');
+}
+
+function renderUnivComp(year, cat) {
+  // 年度切替時: ユーザーが手動変更していなければデフォルト（充足率降順）に戻す
+  if (!capacitySortUserChanged) {
+    capacitySortKey = 'rate';
+    capacitySortDir = 'desc';
+  }
+
+  renderCapacityTable();
 
   // === 学部設置マトリクス ===
   const univNames = Object.keys(FACULTY_MATRIX);
