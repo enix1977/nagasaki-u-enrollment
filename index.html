@@ -971,7 +971,6 @@ function renderDetail(data, univName, yearName) {
 
   const total = data['00'] || 0;
   const tbody = document.getElementById('detailTableBody');
-  const univPref = document.getElementById('selUnivPref').value;
 
   const entries = Object.entries(data)
     .filter(([k]) => k !== '00')
