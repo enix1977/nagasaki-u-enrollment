@@ -432,6 +432,7 @@
     <button class="tab" data-panel="compare">県間比較</button>
     <button class="tab" data-panel="detail">詳細テーブル</button>
     <button class="tab" data-panel="strategy">戦略分析</button>
+    <button class="tab" data-panel="univcomp">競合大学</button>
   </div>
 
   <!-- Panel: Overview -->
@@ -526,7 +527,7 @@
 
     <div class="grid-2" style="margin-top:20px;">
       <div class="card">
-        <div class="card-title">狙い目の県 TOP10</div>
+        <div class="card-title">狙い目の県（九州・沖縄・山口・広島・岡山）</div>
         <div class="card-subtitle">進学者が多いのにシェアが低い = 伸びしろがある県</div>
         <div id="targetChart" class="bar-chart"></div>
       </div>
@@ -542,6 +543,43 @@
       <div class="card-title">大学収容力指数（九州）</div>
       <div class="card-subtitle">100%未満 = 県内の大学だけでは受け入れきれない → 学生が外に出る</div>
       <div id="capacityChart" class="bar-chart"></div>
+    </div>
+  </div>
+
+  <!-- Panel: University Comparison -->
+  <div class="panel" id="panel-univcomp">
+    <div class="card">
+      <div class="card-title">大学入学定員と充足率（九州各県）</div>
+      <div class="card-subtitle">大学定員数 ÷ 当該県の大学進学者数。100%未満＝定員が足りず学生が外に出る</div>
+      <div class="table-scroll">
+        <table class="data-table" id="capacityTable">
+          <thead>
+            <tr>
+              <th>県</th>
+              <th class="num">国立</th>
+              <th class="num">公立</th>
+              <th class="num">私立</th>
+              <th class="num">大学数</th>
+              <th class="num">入学定員</th>
+              <th class="num">進学者数</th>
+              <th class="num">充足率</th>
+            </tr>
+          </thead>
+          <tbody id="capacityTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">九州・中国の国立大学 学部設置状況</div>
+      <div class="card-subtitle">◯ = 設置あり。長崎大学の差別化ポイントが一目でわかる</div>
+      <div style="overflow-x:auto;">
+        <table class="data-table" id="facultyTable" style="min-width:900px;">
+          <thead><tr id="facultyTableHead"></tr></thead>
+          <tbody id="facultyTableBody"></tbody>
+        </table>
+      </div>
+      <div id="facultySummary" style="margin-top:16px;font-size:13px;color:var(--text-secondary);"></div>
     </div>
   </div>
 
@@ -694,6 +732,7 @@ function render() {
   renderCompare(year, cat);
   renderDetail(yearData, univName, yearName);
   renderStrategy(year, cat, univPref, univName, yearName);
+  renderUnivComp(year, cat);
 }
 
 // ============================================================
@@ -1060,10 +1099,12 @@ function renderStrategy(year, cat, univPref, univName, yearName) {
     </tr>`;
   }).join('');
 
-  // === 狙い目の県 TOP10 ===
+  // === 狙い目の県（九州・沖縄・山口・広島・岡山） ===
+  // 対象エリア: 九州8県 + 山口(35) + 広島(34) + 岡山(33)
+  const TARGET_AREA = ['33','34','35','40','41','42','43','44','45','46','47'];
   // スコア = 大学進学者数 × (1 / (シェア + 0.1)) → 進学者が多くシェアが低いほど高スコア
   const targetEntries = shareEntries
-    .filter(e => e.univApplicants > 500 && e.code !== univPref)
+    .filter(e => TARGET_AREA.includes(e.code) && e.code !== univPref)
     .map(e => ({
       ...e,
       score: e.univApplicants * (1 / (e.share + 0.1)),
@@ -1152,6 +1193,118 @@ function renderStrategy(year, cat, univPref, univName, yearName) {
       </div>
     `;
   }).join('');
+}
+
+// ============================================================
+// 競合大学データ（公開情報）
+// ============================================================
+const UNIV_CAPACITY = {
+  "40": {name:"福岡県", national:3, public:4, private:30, total:37, capacity:25477},
+  "44": {name:"大分県", national:1, public:1, private:3, total:5, capacity:3850},
+  "42": {name:"長崎県", national:1, public:1, private:6, total:8, capacity:3861},
+  "43": {name:"熊本県", national:1, public:1, private:8, total:10, capacity:5312},
+  "46": {name:"鹿児島県", national:2, public:0, private:4, total:6, capacity:3598},
+  "45": {name:"宮崎県", national:1, public:2, private:4, total:7, capacity:2145},
+  "41": {name:"佐賀県", national:1, public:0, private:1, total:2, capacity:1698},
+  "47": {name:"沖縄県", national:1, public:3, private:3, total:7, capacity:3542},
+};
+
+const FACULTY_LIST = ["多文化","教育","経済","医・医","歯","薬","情報","工","環境","水産","文","法","理","農"];
+const FACULTY_MATRIX = {
+  "長崎":   [1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+  "九州":   [0,1,1,1,1,1,0,1,0,0,1,1,1,1],
+  "福教":   [0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+  "九工":   [0,0,0,0,0,0,1,1,0,0,0,0,0,0],
+  "佐賀":   [0,1,1,1,0,0,0,1,0,0,0,0,1,1],
+  "熊本":   [0,1,0,1,0,1,1,1,0,0,1,1,1,0],
+  "大分":   [0,1,1,1,0,0,0,1,0,0,0,0,0,0],
+  "宮崎":   [0,1,0,1,0,0,0,1,0,0,0,0,0,1],
+  "鹿児島": [0,1,0,1,0,0,0,1,0,1,1,1,1,1],
+  "沖縄":   [1,1,0,1,0,0,0,1,0,0,1,1,1,1],
+  "山口":   [0,1,1,1,0,0,1,1,0,0,1,0,1,1],
+  "広島":   [0,1,1,1,1,1,1,1,0,0,1,1,1,1],
+  "岡山":   [0,1,1,1,1,1,1,1,1,0,1,1,1,1],
+};
+
+// ============================================================
+// 競合大学タブ描画
+// ============================================================
+function renderUnivComp(year, cat) {
+  // === 充足率テーブル ===
+  const gradData = DATA.graduate_data?.[year] || {};
+  const order = ['40','44','42','43','46','45','41','47'];
+
+  const tbody = document.getElementById('capacityTableBody');
+  tbody.innerHTML = order.map(k => {
+    const uc = UNIV_CAPACITY[k];
+    if (!uc) return '';
+    const grad = gradData[k] || {};
+    const applicants = grad.univ_applicants || 0;
+    const rate = applicants > 0 ? Math.round(uc.capacity / applicants * 100) : 0;
+    const isNagasaki = k === '42';
+    const rateColor = rate >= 100 ? 'var(--accent)' : rate >= 70 ? 'var(--highlight)' : 'var(--danger)';
+    return `<tr class="${isNagasaki?'highlight':''}">
+      <td>${uc.name}</td>
+      <td class="num">${uc.national}</td>
+      <td class="num">${uc.public}</td>
+      <td class="num">${uc.private}</td>
+      <td class="num">${uc.total}</td>
+      <td class="num">${uc.capacity.toLocaleString()}</td>
+      <td class="num">${applicants > 0 ? applicants.toLocaleString() : '—'}</td>
+      <td class="num" style="font-weight:700;color:${rateColor};">${applicants > 0 ? rate+'%' : '—'}</td>
+    </tr>`;
+  }).join('');
+
+  // === 学部設置マトリクス ===
+  const univNames = Object.keys(FACULTY_MATRIX);
+  const thead = document.getElementById('facultyTableHead');
+  thead.innerHTML = '<th>学部＼大学</th>' + univNames.map(u => 
+    `<th style="text-align:center;${u==='長崎'?'background:var(--accent-light);color:var(--accent-dark);font-weight:900;':''}">${u}</th>`
+  ).join('');
+
+  const ftbody = document.getElementById('facultyTableBody');
+  ftbody.innerHTML = FACULTY_LIST.map((f, fi) => {
+    const nagasakiHas = FACULTY_MATRIX['長崎'][fi];
+    // 他にどの大学が設置しているか数える
+    const count = univNames.filter(u => FACULTY_MATRIX[u][fi]).length;
+    const isRare = count <= 4;
+    return `<tr style="${isRare?'background:var(--highlight-light);':''}">
+      <td style="font-weight:${nagasakiHas?'700':'400'};">${f}${isRare?' ★':''}</td>
+      ${univNames.map(u => {
+        const has = FACULTY_MATRIX[u][fi];
+        const isN = u === '長崎';
+        return `<td style="text-align:center;${isN?'background:var(--accent-light);':''}font-weight:${has?'700':'300'};color:${has?(isN?'var(--accent-dark)':'var(--text)'):'#ddd'};">${has?'◯':'—'}</td>`;
+      }).join('')}
+    </tr>`;
+  }).join('');
+
+  // 学部数行
+  ftbody.innerHTML += `<tr style="font-weight:700;background:var(--surface-alt);">
+    <td>学部数</td>
+    ${univNames.map(u => {
+      const cnt = FACULTY_MATRIX[u].reduce((s,v) => s+v, 0);
+      const isN = u === '長崎';
+      return `<td style="text-align:center;${isN?'background:var(--accent-light);color:var(--accent-dark);':''}">${cnt}</td>`;
+    }).join('')}
+  </tr>`;
+
+  // サマリー
+  const nagasakiOnly = FACULTY_LIST.filter((f,i) => {
+    if (!FACULTY_MATRIX['長崎'][i]) return false;
+    const others = univNames.filter(u => u !== '長崎' && FACULTY_MATRIX[u][i]);
+    return others.length <= 2;
+  });
+
+  document.getElementById('facultySummary').innerHTML = `
+    <strong>長崎大学の差別化ポイント（★印）：</strong><br>
+    ${nagasakiOnly.length > 0 ? nagasakiOnly.map(f => `・${f}（設置大学が少ない希少学部）`).join('<br>') : '特になし'}
+    <br><br>
+    <strong>特記事項：</strong><br>
+    ・医歯薬を3学部設置：長崎、九州、広島、岡山のみ<br>
+    ・水産を設置：長崎と鹿児島のみ<br>
+    ・多文化系統を設置：長崎、沖縄、山口のみ<br>
+    ・環境系を設置：長崎と岡山のみ
+  `;
 }
 
 // ============================================================
